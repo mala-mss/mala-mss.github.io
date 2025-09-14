@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MoaBd</title>
+   <link rel="stylesheet" href="bd_moa.css" />
+  <style>
+    .stage{ pointer-events:none; }
+    .stage.active{ pointer-events:auto; }
+    .secret-backdrop{
+      display:none; position:fixed; inset:0; background:rgba(0,0,0,.55);
+      z-index:1000;
+    }
+    .secret-open .secret-backdrop{ display:block; }
+    .secret-open #secret-content{ display:block; }
+    body.secret-open{ overflow:hidden; }
+  </style>
+</head>
+<body>
+  <button class="secret-button" id="secret-trigger" aria-haspopup="dialog" aria-controls="secret-content" aria-expanded="false">
+    DO NOT CLICK THIS BUTTON
+  </button>
+
+  <div class="secret-backdrop" id="secret-backdrop" hidden></div>
+  <div class="secret-content" id="secret-content" role="dialog" aria-modal="true" aria-label="Secret">
+      <h3>u clicked it anyway!</h3>
+      <div style="font-size: 3rem; margin: 1rem 0;"> 🕺 </div>
+      <p>Heres a dancing emoji cause u dont have control over ur hands </p>
+      <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;">
+          <a href="https://www.youtube.com/shorts/SxgEQN0K3Jg" target="_blank" style="color: #4ecdc4;">
+              Definitely not crazy? i was crazy once 
+          </a>
+      </p>
+      <button id="secret-close" style="margin-top: 1rem; padding: 8px 16px; background: #ff4757; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        Close
+      </button>
+  </div>
+
+  <section id="welcome-stage" class="stage active" data-stage="0">
+    <div class="card" style="text-align:center">
+      <h1 class="display">Happy Birthday, Moa ✨ </h1>
+      <p class="subtitle">made it with love ❤️</p>
+      <div class="cta-row">
+        <button class="btn" data-action="next">Begin</button>
+      </div>
+    </div>
+    <div class="sparkles" id="sparkles"></div>
+  </section>
+
+  <section id="memory-stage" class="stage" data-stage="1">
+    <div class="card">
+      <h2 class="display" style="font-size:clamp(28px,4.5vw,42px)">Memory Lane</h2>
+      <p class="subtitle" style="margin-bottom:18px">Little pics that make me smile </p>
+      <div class="memory-grid">
+        <figure class="photo">
+          <img src="helloKitty.jpg" alt="Hello Kitty Moha">
+          <figcaption class="caption"> you hated me doing this but ngl finding cute hehe so adorable boo</figcaption>
+        </figure>
+        <figure class="photo">
+          <img src="freiren.jpg" alt="Frieren Moha">
+          <figcaption class="caption">legit frieren moa T,T</figcaption>
+        </figure>
+        <figure class="photo">
+          <img src="chill.jpg" alt="Chill Moha">
+          <figcaption class="caption">That relaxed smile? Priceless. Keep it. muah</figcaption>
+        </figure>
+        <figure class="photo" style="height:240px; width:240px">
+          <img src="us1.jpg" alt="us" style="width:240px; height:240px; object-fit:cover; border-radius:12px;">
+          <figcaption class="caption">Our first meeting , one of the most precious times bichbich</figcaption>
+        </figure>
+
+      </div>
+      <div class="uploader" style="margin-top:14px">
+        <input type="file" id="photo-input" accept="image/*" hidden>
+        <input id="photo-caption" class="input" placeholder="Add a cute caption…">
+        <button class="btn" id="add-photo">Add picture from desktop</button>
+      </div>
+      <div class="cta-row" style="margin-top:18px"><button class="btn" data-action="next">To the Cake</button></div>
+    </div>
+  </section>
+
+  <section id="cake-stage" class="stage" data-stage="2">
+    <div class="card">
+      <h2 class="display" style="font-size:clamp(28px,4.5vw,42px)">Make a Wish</h2>
+      <br>
+      <br>
+      <br>
+      
+      <br>
+      <div class="cake-wrap">
+        <div class="cake" aria-label="Birthday cake">
+          <div class="candles">
+            <div class="candle"><div class="flame"></div></div>
+            <div class="candle"><div class="flame"></div></div>
+            <div class="candle"><div class="flame"></div></div>
+            <div class="candle"><div class="flame"></div></div>
+            <div class="candle"><div class="flame"></div></div>
+          </div>
+        </div>
+        <p class="instruction">Hover to blow the candles. : )</p>
+      </div>
+      <div class="cta-row"><button class="btn" data-action="next">Skip</button></div>
+    </div>
+  </section>
+
+  <section id="letter-stage" class="stage" data-stage="3">
+    <div class="card">
+      <h2 class="display" style="font-size:clamp(28px,4.5vw,42px)">A Small Letter</h2>
+      <p id="letter" class="letter type"></p>
+      <div class="cta-row"><button class="btn" data-action="next">Continue</button></div>
+    </div>
+  </section>
+
+  <section id="wish-stage" class="stage" data-stage="4">
+    <div class="card">
+      <h2 class="display" style="font-size:clamp(28px,4.5vw,42px)">Your Year, Your Wish</h2>
+      <p class="subtitle">Write wishes hun</p>
+      <div class="wish-controls">
+        <input id="wish-input" class="input" placeholder="Type a gentle wish…"/>
+        <button class="btn" id="pin-wish">Pin Wish</button>
+      </div>
+      <div id="wall" class="wish-wall" style="margin-top:14px"></div>
+      <div class="cta-row" style="margin-top:14px"><button class="btn" data-action="next">Certificate</button></div>
+    </div>
+  </section>
+
+  <section id="certificate-stage" class="stage" data-stage="5">
+    <div class="card">
+      <h2 class="display" style="font-size:clamp(28px,4.5vw,42px)">Go Officially 25 with a certificate hehe</h2>
+      <p class="subtitle">click generate then download</p>
+      <div class="cert-controls" style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+      
+        <button class="btn" id="generate-cert">Generate</button>
+        <button class="btn secondary" id="download-cert" disabled>Download PNG</button>
+      </div>
+      <div class="cert-canvas-wrap">
+        <canvas id="cert-canvas" width="1100" height="800" aria-label="Certificate preview"></canvas>
+      </div>
+      <div class="cta-row" style="margin-top:16px">
+        <button class="btn" data-action="next">Continue</button>
+      </div>
+    </div>
+  </section>
+<section id="final-stage" class="stage final" data-stage="6">
+    <div class="card" style="text-align:center">
+      <h2 class="display">My wishes for you &lt;3 </h2>
+      <p class="subtitle" style="max-width:60ch;margin:0 auto 16px auto">
+      wish u to be healthier, happier, and more stable — in mind, heart, and life — and to achieve every dream and goal u hold close.
+ik there’s a sportsman moa deep inside u, strong and determined, and i hope i get to see him break free again.
+i wanna see u back in the gym, pushing yourself, feeling proud after every rep.
+i wanna see that fire in ur eyes, the athlete spirit u’ve been keeping inside.
+ur a treasure covered in the dust of this world, and i hope i can be the one to wipe it away and watch u shine.
+i wanna see the strong u,
+the healthy u,
+the happy u,
+the stable u,
+the successful u —
+and me right there, by ur side, cheering for u every single step.
+       
+      </p>
+      <div class="cta-row">
+        <button class="btn" id="celebrate">Celebrate</button>
+        <button class="btn secondary" id="restart">Start Over</button>
+      </div>
+    </div>
+  </section>
+
+  
+<script>
+(function(){
+  // Stages
+  let current = 0;
+  const stageIds = ["welcome-stage","memory-stage","cake-stage","letter-stage","wish-stage","certificate-stage","final-stage"];
+
+
+  const $ = (sel, root=document)=> root.querySelector(sel);
+  const $$ = (sel, root=document)=> Array.from(root.querySelectorAll(sel));
+
+  function setActive(idx){
+    const prevId = stageIds[current], nextId = stageIds[idx];
+    const prev = document.getElementById(prevId), next = document.getElementById(nextId);
+    if(!prev || !next) return;
+    prev.classList.remove('active'); prev.classList.add('prev');
+    current = idx;
+    setTimeout(()=>{ next.classList.remove('prev'); next.classList.add('active'); }, 60);
+    if(current===2) resetCandles();
+    if(current===3) startLetter();
+  }
+  function next(){ if(current < stageIds.length-1) setActive(current+1); }
+  window.goToStage = setActive; window.nextStage = next;
+
+  document.getElementById(stageIds[0])?.classList.add('active');
+
+  document.body.addEventListener('click', (e)=>{
+    const a = e.target.closest('[data-action="next"]'); if(a) { next(); }
+    if(e.target.id === 'restart'){ setActive(0); }
+    if(e.target.id === 'celebrate'){ startConfetti(); }
+    if(e.target.id === 'pin-wish'){ addWish(); }
+  });
+
+  document.addEventListener('keydown', (e)=>{
+    const tag = e.target.tagName.toLowerCase();
+    if(tag === 'input' || tag === 'textarea') return;
+    if(document.body.classList.contains('secret-open')){
+      if(e.key === 'Escape'){ closeSecret(); }
+      return;
+    }
+    if(e.key === 'Enter' || e.key === ' '){ next(); }
+  });
+
+  const sparkles = document.getElementById('sparkles');
+  if (sparkles){
+    for(let i=0;i<80;i++){
+      const s = document.createElement('div');
+      s.className='sparkle';
+      s.style.left = Math.random()*100 + 'vw';
+      s.style.top = Math.random()*100 + 'vh';
+      s.style.animationDuration = (6 + Math.random()*8) + 's';
+      s.style.opacity = 0.5 + Math.random()*0.5;
+      sparkles.appendChild(s);
+    }
+  }
+
+  let blown = 0, total = 5;
+  function resetCandles(){
+    blown = 0;
+    $$('.candle').forEach(c=>c.classList.remove('blown'));
+  }
+  function burst(){
+    for (let i=0;i<36;i++){
+      const conf = document.createElement('div');
+      conf.className = 'confetti';
+      conf.style.left = (50 + (Math.random()*10-5)) + 'vw';
+      conf.style.background = `hsl(${Math.random()*360}, 90%, 70%)`;
+      const size = (6 + Math.random()*8) + 'px';
+      conf.style.width = size; conf.style.height = size;
+      conf.style.setProperty('--dur', (2.8 + Math.random()*2) + 's');
+      document.body.appendChild(conf);
+      setTimeout(()=>conf.remove(), 4500);
+    }
+  }
+  function blow(candle){
+    if (!candle.classList.contains('blown')){
+      candle.classList.add('blown'); blown++;
+      if (blown === total){ burst(); setTimeout(()=>next(), 900); }
+    }
+  }
+  document.addEventListener('mouseover', (e)=>{
+    if(e.target.classList.contains('candle')) blow(e.target);
+  });
+  document.addEventListener('touchstart', (e)=>{
+    if (e.target.classList.contains('candle')){ e.preventDefault(); blow(e.target); }
+  }, {passive:false});
+
+  const letter = $("#letter");
+  const text = "You’ve made it through so much to be here today,\nand I hope you know how proud I am of you — not just for surviving,\nbut for keeping that soft heart, that smile, that spark.\nYou deserve to be celebrated, deeply and truly.\nI’m so glad you exist in my life .";
+  function type(node, s, i=0){
+    if(i<=s.length){ node.innerHTML = s.slice(0,i).replace(/\n/g,"<br>"); setTimeout(()=>type(node,s,i+1),22); }
+  }
+  function startLetter(){ if(letter && !letter.innerHTML){ type(letter, text); letter.classList.remove('type'); } }
+  if('IntersectionObserver' in window && letter){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting && current===3 && !letter.innerHTML) startLetter(); });
+    });
+    io.observe(letter);
+  }
+
+  function escapeHtml(str){ return str.replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+  window.addWish = function(){
+    const input = $("#wish-input");
+    const wall  = $("#wall");
+    if(!input || !wall) return;
+    const text = (input.value || "").trim(); if(!text) return;
+    const card = document.createElement('div'); card.className='note';
+    card.innerHTML = "<h4>Wish</h4><p>"+ escapeHtml(text) +"</p>";
+    wall.prepend(card); input.value="";
+    floatHearts();
+  }
+  function floatHearts(){
+    for (let i=0;i<8;i++){
+      const h = document.createElement('div');
+      h.textContent = "💕"; h.style.position = "fixed";
+      h.style.left = (10 + Math.random()*80) + "vw"; h.style.bottom = "-10vh";
+      h.style.fontSize = (18 + Math.random()*20) + "px"; h.style.opacity = .9;
+      h.style.transition = "transform 3.4s linear, opacity 3.4s linear";
+      document.body.appendChild(h);
+      requestAnimationFrame(()=>{ h.style.transform = "translateY(-120vh)"; h.style.opacity = 0; });
+      setTimeout(()=>h.remove(), 3600);
+    }
+  }
+
+  window.startConfetti = function(){
+    if (window._confettiTimer) return;
+    window._confettiTimer = setInterval(()=>{
+      const conf = document.createElement('div');
+      conf.className = "confetti";
+      conf.style.left = Math.random()*100 + 'vw';
+      conf.style.background = `hsl(${Math.random()*360}, 90%, 70%)`;
+      const size = (6 + Math.random()*10) + 'px';
+      conf.style.width = size; conf.style.height = size;
+      conf.style.setProperty('--dur', (3 + Math.random()*3) + 's');
+      document.body.appendChild(conf);
+      setTimeout(()=>conf.remove(), 7000);
+    }, 80);
+  };
+
+
+  const secretBtn = $("#secret-trigger");
+  const secret = $("#secret-content");
+  const backdrop = $("#secret-backdrop");
+  const closeBtn = $("#secret-close");
+  let lastFocus = null;
+
+  function openSecret(){
+    lastFocus = document.activeElement;
+    document.body.classList.add('secret-open');
+    secretBtn && secretBtn.setAttribute('aria-expanded','true');
+    backdrop && backdrop.removeAttribute('hidden');
+    closeBtn && closeBtn.focus();
+  }
+  function closeSecret(){
+    document.body.classList.remove('secret-open');
+    secretBtn && secretBtn.setAttribute('aria-expanded','false');
+    backdrop && backdrop.setAttribute('hidden','');
+    if(lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  window.toggleSecret = function(){
+    if(document.body.classList.contains('secret-open')) closeSecret();
+    else openSecret();
+  };
+
+  if(secretBtn) secretBtn.addEventListener('click', (e)=>{ e.stopPropagation(); openSecret(); });
+  if(closeBtn) closeBtn.addEventListener('click', (e)=>{ e.stopPropagation(); closeSecret(); });
+  if(backdrop) backdrop.addEventListener('click', ()=> closeSecret());
+
+  document.addEventListener('focusin', (e)=>{
+    if(!document.body.classList.contains('secret-open')) return;
+    if(!secret.contains(e.target) && e.target !== secretBtn){
+      e.stopPropagation();
+      closeBtn && closeBtn.focus();
+    }
+  });
+
+})();
+
+const addBtn = document.getElementById('add-photo');
+const fileInp = document.getElementById('photo-input');
+const capInp  = document.getElementById('photo-caption');
+const grid    = document.querySelector('.memory-grid');
+
+if (addBtn && fileInp && capInp && grid){
+  addBtn.addEventListener('click', ()=> fileInp.click());
+  fileInp.addEventListener('change', ()=>{
+    const file = fileInp.files?.[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (e)=>{
+      const fig = document.createElement('figure');
+      fig.className = 'photo';
+      const aspects = ["1/1","3/4","4/3","16/10","10/16"];
+      fig.style.aspectRatio = aspects[Math.floor(Math.random()*aspects.length)];
+      const img = document.createElement('img');
+      img.alt = 'Memory'; img.src = e.target?.result || '';
+      const fc = document.createElement('figcaption');
+      fc.className = 'caption'; fc.textContent = (capInp.value || 'A perfect lil memory');
+      fig.appendChild(img); fig.appendChild(fc);
+      grid.prepend(fig);
+      capInp.value = '';
+    };
+    reader.readAsDataURL(file);
+    fileInp.value = '';
+  });
+}
+
+
+const cnv = document.getElementById('cert-canvas');
+const gen = document.getElementById('generate-cert');
+const dwn = document.getElementById('download-cert');
+const nameInput = "Moa";
+function drawCertificate(name="moa"){
+  if(!cnv) return;
+  const ctx = cnv.getContext('2d');
+  const W = cnv.width, H = cnv.height;
+  const bg1 = '#0b0f14', bg2 = '#171b22', card = '#0f141a';
+  const accent = '#8ec5ff', accent2 = '#ffd6a5', text = '#eef3f8', muted='#a7b3c2';
+  const g = ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0, bg1); g.addColorStop(1, bg2);
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+  ctx.lineWidth = 12; ctx.strokeRect(40,40,W-80,H-80);
+  ctx.lineWidth = 3;  ctx.strokeRect(70,70,W-140,H-140);
+  ctx.fillStyle = accent;
+  ctx.fillRect(W*0.15, 160, W*0.70, 80);
+  ctx.fillStyle = '#061018';
+  ctx.font = 'bold 48px Georgia';
+  ctx.textAlign = 'center';
+  ctx.fillText('CERTIFICATE OF TWENTY-FIVENESS', W/2, 214);
+  ctx.fillStyle = card;
+  ctx.beginPath();
+  ctx.roundRect(130, 280, W-260, H-440, 28);
+  ctx.fill();
+  ctx.fillStyle = text; ctx.font = '700 66px Georgia'; ctx.fillText('Officially 25 ', W/2, 380);
+  ctx.fillStyle = muted; ctx.font = '28px Inter'; ctx.fillText('Presented to', W/2, 440);
+  ctx.fillStyle = text; ctx.font = '700 84px Georgia'; ctx.fillText(name.toUpperCase(), W/2, 520);
+  ctx.fillStyle = muted; ctx.font = '30px Inter';
+  ctx.fillText('For 25 years of hard work, passion, and sweetness.', W/2, 620);
+}
+if (gen && dwn && nameInput && cnv){
+  gen.addEventListener('click', ()=>{
+    drawCertificate((nameInput || 'Birthday Legend').trim());
+    dwn.disabled = false;
+  });
+  dwn.addEventListener('click', ()=>{
+    const url = cnv.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = url; a.download = 'BichBich_is_25.png';
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+}
+
+// Override with cleaner certificate design
+function drawCertificate(name="MOA THE BIRTHDAY LEGEND"){
+  if(!cnv) return;
+  const ctx = cnv.getContext('2d');
+  const W = cnv.width, H = cnv.height;
+
+  // Elegant parchment background
+  const bg = ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0, '#f7f2e9');
+  bg.addColorStop(1, '#efe6d8');
+  ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
+
+  // Ornate border
+  ctx.strokeStyle = '#c8a44b';
+  ctx.lineWidth = 14; ctx.strokeRect(40,40,W-80,H-80);
+  ctx.strokeStyle = '#8e6f2a';
+  ctx.lineWidth = 2; ctx.strokeRect(64,64,W-128,H-128);
+
+  // Title banner
+  const bannerGrad = ctx.createLinearGradient(0,0,0,100);
+  bannerGrad.addColorStop(0,'#f5d88a');
+  bannerGrad.addColorStop(1,'#e6b84e');
+  const bannerX = W*0.12, bannerW = W*0.76, bannerY = 150, bannerH = 70, r = 18;
+  ctx.fillStyle = bannerGrad;
+  ctx.beginPath();
+  ctx.moveTo(bannerX+r, bannerY);
+  ctx.lineTo(bannerX+bannerW-r, bannerY);
+  ctx.quadraticCurveTo(bannerX+bannerW, bannerY, bannerX+bannerW, bannerY+r);
+  ctx.lineTo(bannerX+bannerW, bannerY+bannerH-r);
+  ctx.quadraticCurveTo(bannerX+bannerW, bannerY+bannerH, bannerX+bannerW-r, bannerY+bannerH);
+  ctx.lineTo(bannerX+r, bannerY+bannerH);
+  ctx.quadraticCurveTo(bannerX, bannerY+bannerH, bannerX, bannerY+bannerH-r);
+  ctx.lineTo(bannerX, bannerY+r);
+  ctx.quadraticCurveTo(bannerX, bannerY, bannerX+r, bannerY);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#5b451d';
+  ctx.font = 'bold 40px Georgia';
+  ctx.fillText('CERTIFICATE OF TWENTY-FIVENESS', W/2, bannerY + 46);
+
+  // Body card
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.strokeStyle = 'rgba(0,0,0,0.05)';
+  ctx.lineWidth = 1.5;
+  const cardX = 120, cardY = 250, cardW = W-240, cardH = H-420, cr = 26;
+  ctx.beginPath();
+  ctx.moveTo(cardX+cr, cardY);
+  ctx.lineTo(cardX+cardW-cr, cardY);
+  ctx.quadraticCurveTo(cardX+cardW, cardY, cardX+cardW, cardY+cr);
+  ctx.lineTo(cardX+cardW, cardY+cardH-cr);
+  ctx.quadraticCurveTo(cardX+cardW, cardY+cardH, cardX+cardW-cr, cardY+cardH);
+  ctx.lineTo(cardX+cr, cardY+cardH);
+  ctx.quadraticCurveTo(cardX, cardY+cardH, cardX, cardY+cardH-cr);
+  ctx.lineTo(cardX, cardY+cr);
+  ctx.quadraticCurveTo(cardX, cardY, cardX+cr, cardY);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // Headline
+  ctx.fillStyle = '#704d28';
+  ctx.font = '700 60px Georgia';
+  ctx.fillText('Officially 25', W/2, 340);
+
+  // Presented to + Name
+  ctx.fillStyle = '#6b5e4a';
+  ctx.font = '24px Georgia';
+  ctx.fillText('Presented to', W/2, 390);
+
+  ctx.fillStyle = '#3a2c1c';
+  ctx.font = '700 72px Georgia';
+  const displayName = (name || 'Birthday Legend').toUpperCase();
+  ctx.fillText(displayName, W/2, 460);
+
+  // Tagline
+  ctx.fillStyle = '#6b5e4a';
+  ctx.font = '26px Georgia';
+  ctx.fillText('For 25 years of hard work, passion, and sweetness.', W/2, 520);
+
+  // Seal
+  const cx = W*0.22, cy = H-220, R1 = 64, R2 = 48;
+  const sealG = ctx.createRadialGradient(cx,cy,10, cx,cy,R1);
+  sealG.addColorStop(0,'#f9e7a5');
+  sealG.addColorStop(1,'#d6b766');
+  ctx.fillStyle = sealG;
+  ctx.beginPath(); ctx.arc(cx,cy,R1,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#8e6f2a';
+  ctx.beginPath(); ctx.arc(cx,cy,R2,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 40px Georgia'; ctx.fillText('25', cx, cy+14);
+
+  // Signature and date lines
+  ctx.strokeStyle = 'rgba(0,0,0,0.25)';
+  ctx.lineWidth = 1.2;
+  const sigY = H-180, leftX = W*0.55, rightX = W*0.80;
+  ctx.beginPath(); ctx.moveTo(leftX-120, sigY); ctx.lineTo(leftX+120, sigY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(rightX-80, sigY); ctx.lineTo(rightX+80, sigY); ctx.stroke();
+  ctx.fillStyle = '#6b5e4a'; ctx.font = '20px Georgia';
+  ctx.fillText('Signature', leftX, sigY+26);
+  ctx.fillText('Date', rightX, sigY+26);
+}
+</script>
+
+<style>
+ 
+  .cert-canvas-wrap {
+    max-width: clamp(320px, 90vw, 900px);
+    margin: 0 auto;
+  }
+  #cert-canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+</style>
+</body>
+</html>
