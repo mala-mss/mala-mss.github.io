@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MoaBd</title>
-   <link rel="stylesheet" href="style.css" />
+   <link rel="stylesheet" href="bd_moa.css" />
   <style>
     .stage{ pointer-events:none; }
     .stage.active{ pointer-events:auto; }
@@ -500,6 +500,11 @@ function drawCertificate(name="MOA THE BIRTHDAY LEGEND"){
   ctx.font = '26px Georgia';
   ctx.fillText('For 25 years of hard work, passion, and sweetness.', W/2, 520);
 
+  // Date of Birth
+  ctx.fillStyle = '#6b5e4a';
+  ctx.font = '22px Georgia';
+  ctx.fillText('Date of Birth: 16-09-2020', W/2, 560);
+
   // Seal
   const cx = W*0.22, cy = H-220, R1 = 64, R2 = 48;
   const sealG = ctx.createRadialGradient(cx,cy,10, cx,cy,R1);
@@ -535,5 +540,99 @@ function drawCertificate(name="MOA THE BIRTHDAY LEGEND"){
     display: block;
   }
 </style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  function pad2(n){ return (n < 10 ? '0' : '') + n; }
+  function formatDate(d) {
+    var day = pad2(d.getDate());
+    var month = pad2(d.getMonth() + 1);
+    var year = d.getFullYear();
+    return day + '-' + month + '-' + year;
+  }
+  var todayStr = formatDate(new Date());
+
+  function setByLabel(label, value) {
+    var candidates = Array.prototype.slice.call(document.querySelectorAll('th,td,label,span,div,p,strong,b'))
+      .filter(function(el){
+        return el.textContent && el.textContent.trim().toLowerCase() === label.toLowerCase();
+      });
+    candidates.forEach(function(el){
+      var target = null;
+      var tr = el.closest && el.closest('tr');
+      if (tr) {
+        var cells = Array.prototype.slice.call(tr.children);
+        var idx = cells.indexOf(el);
+        if (idx > -1) {
+          for (var i = idx + 1; i < cells.length; i++) {
+            if ((cells[i].textContent || '').trim() === '' || cells[i].dataset.autoFill === 'signatureDate') {
+              target = cells[i];
+              break;
+            }
+          }
+        }
+      }
+      if (!target) {
+        var sib = el.nextElementSibling;
+        while (sib && !target) {
+          if (sib.matches && sib.matches('td,th,span,div,p')) {
+            target = sib;
+            break;
+          }
+          sib = sib.nextElementSibling;
+        }
+      }
+      if (!target) {
+        target = document.createElement('span');
+        el.insertAdjacentElement('afterend', target);
+      }
+      target.textContent = value;
+    });
+  }
+
+
+  var sigDateEl = document.querySelector('#signature-date, .signature-date, [data-signature-date]');
+  if (sigDateEl) {
+    sigDateEl.textContent = todayStr;
+  } else {
+    var sigLabels = Array.prototype.slice.call(document.querySelectorAll('th,td,label,span,div,p,strong,b'))
+      .filter(function(el){ return /signature/i.test(el.textContent || ''); });
+    sigLabels.forEach(function(labelEl){
+      var target = null;
+      var tr = labelEl.closest && labelEl.closest('tr');
+      if (tr) {
+        var cells = Array.prototype.slice.call(tr.children);
+        var idx = cells.indexOf(labelEl);
+        for (var i = idx + 1; i < cells.length; i++) {
+          var txt = (cells[i].textContent || '').trim();
+          if (txt === '' || /date/i.test(txt)) { target = cells[i]; break; }
+        }
+      }
+      if (!target) {
+        var sib = labelEl.nextElementSibling;
+        while (sib && !target) {
+          if (sib.matches && sib.matches('td,th,span,div,p')) { target = sib; break; }
+          sib = sib.nextElementSibling;
+        }
+      }
+      if (!target) {
+        target = document.createElement('span');
+        target.className = 'signature-date';
+        labelEl.insertAdjacentElement('afterend', target);
+      }
+      target.textContent = todayStr;
+    });
+  }
+
+  // Set Date of Birth to the requested fixed value
+  var dobValue = '16-09-2000';
+  var dobEl = document.querySelector('#date-of-birth, .date-of-birth, [data-dob]');
+  if (dobEl) {
+    dobEl.textContent = dobValue;
+  } else {
+    setByLabel('Date of Birth', dobValue);
+    setByLabel('DOB', dobValue);
+  }
+});
+</script>
 </body>
 </html>
